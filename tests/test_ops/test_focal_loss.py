@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 import torch
 
-from mmcv.utils import IS_CUDA_AVAILABLE, IS_MLU_AVAILABLE, IS_NPU_AVAILABLE
+from mmcv.utils import IS_CUDA_AVAILABLE, IS_MLU_AVAILABLE
 
 _USING_PARROTS = True
 try:
@@ -131,10 +131,6 @@ class Testfocalloss:
 
     @pytest.mark.parametrize('device', [
         pytest.param(
-            'npu',
-            marks=pytest.mark.skipif(
-                not IS_NPU_AVAILABLE, reason='requires NPU support')),
-        pytest.param(
             'cuda',
             marks=pytest.mark.skipif(
                 not IS_CUDA_AVAILABLE, reason='requires CUDA support')),
@@ -147,10 +143,6 @@ class Testfocalloss:
         self._test_sigmoid(device=device, dtype=torch.float)
 
     @pytest.mark.parametrize('device', [
-        pytest.param(
-            'npu',
-            marks=pytest.mark.skipif(
-                not IS_NPU_AVAILABLE, reason='requires NPU support')),
         pytest.param(
             'cuda',
             marks=pytest.mark.skipif(

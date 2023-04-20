@@ -1,6 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-from typing import Optional
-
 import numpy as np
 
 import mmcv
@@ -11,10 +9,7 @@ except ImportError:
     torch = None
 
 
-def tensor2imgs(tensor,
-                mean: Optional[tuple] = None,
-                std: Optional[tuple] = None,
-                to_rgb: bool = True) -> list:
+def tensor2imgs(tensor, mean=None, std=None, to_rgb=True):
     """Convert tensor to 3-channel images or 1-channel gray images.
 
     Args:

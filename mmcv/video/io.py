@@ -6,8 +6,9 @@ import cv2
 from cv2 import (CAP_PROP_FOURCC, CAP_PROP_FPS, CAP_PROP_FRAME_COUNT,
                  CAP_PROP_FRAME_HEIGHT, CAP_PROP_FRAME_WIDTH,
                  CAP_PROP_POS_FRAMES, VideoWriter_fourcc)
-from mmengine.utils import (check_file_exist, mkdir_or_exist, scandir,
-                            track_progress)
+
+from mmcv.utils import (check_file_exist, mkdir_or_exist, scandir,
+                        track_progress)
 
 
 class Cache:
@@ -41,7 +42,7 @@ class Cache:
 class VideoReader:
     """Video class with similar usage to a list object.
 
-    This video wrapper class provides convenient apis to access frames.
+    This video warpper class provides convenient apis to access frames.
     There exists an issue of OpenCV's VideoCapture class that jumping to a
     certain frame may be inaccurate. It is fixed in this class by checking
     the position after jumping each time.

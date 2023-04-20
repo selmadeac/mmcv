@@ -4,38 +4,19 @@ from typing import Dict
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from mmengine.registry import MODELS
-from mmengine.utils import digit_version
-from mmengine.utils.dl_utils import TORCH_VERSION
+
+from mmcv.utils import TORCH_VERSION, build_from_cfg, digit_version
+from .registry import ACTIVATION_LAYERS
 
 for module in [
         nn.ReLU, nn.LeakyReLU, nn.PReLU, nn.RReLU, nn.ReLU6, nn.ELU,
         nn.Sigmoid, nn.Tanh
 ]:
-    MODELS.register_module(module=module)
-
-if digit_version(torch.__version__) >= digit_version('1.7.0'):
-    MODELS.register_module(module=nn.SiLU, name='SiLU')
-else:
-
-    class SiLU(nn.Module):
-        """Sigmoid Weighted Liner Unit."""
-
-        def __init__(self, inplace=False):
-            super().__init__()
-            self.inplace = inplace
-
-        def forward(self, inputs) -> torch.Tensor:
-            if self.inplace:
-                return inputs.mul_(torch.sigmoid(inputs))
-            else:
-                return inputs * torch.sigmoid(inputs)
-
-    MODELS.register_module(module=SiLU, name='SiLU')
+    ACTIVATION_LAYERS.register_module(module=module)
 
 
-@MODELS.register_module(name='Clip')
-@MODELS.register_module()
+@ACTIVATION_LAYERS.register_module(name='Clip')
+@ACTIVATION_LAYERS.register_module()
 class Clamp(nn.Module):
     """Clamp activation layer.
 
@@ -94,9 +75,9 @@ class GELU(nn.Module):
 
 if (TORCH_VERSION == 'parrots'
         or digit_version(TORCH_VERSION) < digit_version('1.4')):
-    MODELS.register_module(module=GELU)
+    ACTIVATION_LAYERS.register_module(module=GELU)
 else:
-    MODELS.register_module(module=nn.GELU)
+    ACTIVATION_LAYERS.register_module(module=nn.GELU)
 
 
 def build_activation_layer(cfg: Dict) -> nn.Module:
@@ -111,4 +92,4 @@ def build_activation_layer(cfg: Dict) -> nn.Module:
     Returns:
         nn.Module: Created activation layer.
     """
-    return MODELS.build(cfg)
+    return build_from_cfg(cfg, ACTIVATION_LAYERS)

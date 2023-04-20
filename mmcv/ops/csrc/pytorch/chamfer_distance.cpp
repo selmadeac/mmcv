@@ -13,11 +13,11 @@ void chamfer_distance_forward_impl(const Tensor xyz1, const Tensor xyz2,
 }
 
 void chamfer_distance_backward_impl(const Tensor xyz1, const Tensor xyz2,
-                                    Tensor idx1, Tensor idx2, Tensor graddist1,
-                                    Tensor graddist2, Tensor gradxyz1,
-                                    Tensor gradxyz2) {
-  DISPATCH_DEVICE_IMPL(chamfer_distance_backward_impl, xyz1, xyz2, idx1, idx2,
-                       graddist1, graddist2, gradxyz1, gradxyz2);
+                                    Tensor gradxyz1, Tensor gradxyz2,
+                                    Tensor graddist1, Tensor graddist2,
+                                    Tensor idx1, Tensor idx2) {
+  DISPATCH_DEVICE_IMPL(chamfer_distance_backward_impl, xyz1, xyz2, gradxyz1,
+                       gradxyz2, graddist1, graddist2, idx1, idx2);
 }
 
 void chamfer_distance_forward(const Tensor xyz1, const Tensor xyz2,
@@ -27,9 +27,9 @@ void chamfer_distance_forward(const Tensor xyz1, const Tensor xyz2,
 }
 
 void chamfer_distance_backward(const Tensor xyz1, const Tensor xyz2,
-                               Tensor idx1, Tensor idx2, Tensor graddist1,
-                               Tensor graddist2, Tensor gradxyz1,
-                               Tensor gradxyz2) {
-  chamfer_distance_backward_impl(xyz1, xyz2, idx1, idx2, graddist1, graddist2,
-                                 gradxyz1, gradxyz2);
+                               Tensor gradxyz1, Tensor gradxyz2,
+                               Tensor graddist1, Tensor graddist2, Tensor idx1,
+                               Tensor idx2) {
+  chamfer_distance_backward_impl(xyz1, xyz2, gradxyz1, gradxyz2, graddist1,
+                                 graddist2, idx1, idx2);
 }

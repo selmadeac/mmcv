@@ -4,14 +4,7 @@
 #include "pytorch_cpp_helper.hpp"
 
 #ifdef MMCV_WITH_CUDA
-#ifdef MMCV_WITH_HIP
-#include <hip/hip_runtime_api.h>
-int get_hiprt_version() {
-  int runtimeVersion;
-  hipRuntimeGetVersion(&runtimeVersion);
-  return runtimeVersion;
-}
-#else
+#ifndef HIP_DIFF
 #include <cuda_runtime_api.h>
 int get_cudart_version() { return CUDART_VERSION; }
 #endif
@@ -19,7 +12,7 @@ int get_cudart_version() { return CUDART_VERSION; }
 
 std::string get_compiling_cuda_version() {
 #ifdef MMCV_WITH_CUDA
-#ifndef MMCV_WITH_HIP
+#ifndef HIP_DIFF
   std::ostringstream oss;
   // copied from
   // https://github.com/pytorch/pytorch/blob/master/aten/src/ATen/cuda/detail/CUDAHooks.cpp#L231
@@ -32,9 +25,7 @@ std::string get_compiling_cuda_version() {
   printCudaStyleVersion(get_cudart_version());
   return oss.str();
 #else
-  std::ostringstream oss;
-  oss << get_hiprt_version();
-  return oss.str();
+  return std::string("rocm not available");
 #endif
 #else
   return std::string("not available");

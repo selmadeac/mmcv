@@ -3,45 +3,45 @@
 
 void AssignScoreWithKForwardCUDAKernelLauncher(
     int B, int N0, int N1, int M, int K, int O, int aggregate,
-    const Tensor &points, const Tensor &centers, const Tensor &scores,
-    const Tensor &knn_idx, Tensor &output);
+    const Tensor& points, const Tensor& centers, const Tensor& scores,
+    const Tensor& knn_idx, Tensor& output);
 
 void AssignScoreWithKBackwardCUDAKernelLauncher(
     int B, int N0, int N1, int M, int K, int O, int aggregate,
-    const Tensor &grad_out, const Tensor &points, const Tensor &centers,
-    const Tensor &scores, const Tensor &knn_idx, Tensor &grad_points,
-    Tensor &grad_centers, Tensor &grad_scores);
+    const Tensor& grad_out, const Tensor& points, const Tensor& centers,
+    const Tensor& scores, const Tensor& knn_idx, Tensor& grad_points,
+    Tensor& grad_centers, Tensor& grad_scores);
 
 void assign_score_withk_forward_cuda(int B, int N0, int N1, int M, int K, int O,
-                                     int aggregate, const Tensor &points,
-                                     const Tensor &centers,
-                                     const Tensor &scores,
-                                     const Tensor &knn_idx, Tensor &output) {
+                                     int aggregate, const Tensor& points,
+                                     const Tensor& centers,
+                                     const Tensor& scores,
+                                     const Tensor& knn_idx, Tensor& output) {
   AssignScoreWithKForwardCUDAKernelLauncher(
       B, N0, N1, M, K, O, aggregate, points, centers, scores, knn_idx, output);
 };
 
 void assign_score_withk_backward_cuda(
     int B, int N0, int N1, int M, int K, int O, int aggregate,
-    const Tensor &grad_out, const Tensor &points, const Tensor &centers,
-    const Tensor &scores, const Tensor &knn_idx, Tensor &grad_points,
-    Tensor &grad_centers, Tensor &grad_scores) {
+    const Tensor& grad_out, const Tensor& points, const Tensor& centers,
+    const Tensor& scores, const Tensor& knn_idx, Tensor& grad_points,
+    Tensor& grad_centers, Tensor& grad_scores) {
   AssignScoreWithKBackwardCUDAKernelLauncher(
       B, N0, N1, M, K, O, aggregate, grad_out, points, centers, scores, knn_idx,
       grad_points, grad_centers, grad_scores);
 };
 
 void assign_score_withk_forward_impl(int B, int N0, int N1, int M, int K, int O,
-                                     int aggregate, const Tensor &points,
-                                     const Tensor &centers,
-                                     const Tensor &scores,
-                                     const Tensor &knn_idx, Tensor &output);
+                                     int aggregate, const Tensor& points,
+                                     const Tensor& centers,
+                                     const Tensor& scores,
+                                     const Tensor& knn_idx, Tensor& output);
 
 void assign_score_withk_backward_impl(
     int B, int N0, int N1, int M, int K, int O, int aggregate,
-    const Tensor &grad_out, const Tensor &points, const Tensor &centers,
-    const Tensor &scores, const Tensor &knn_idx, Tensor &grad_points,
-    Tensor &grad_centers, Tensor &grad_scores);
+    const Tensor& grad_out, const Tensor& points, const Tensor& centers,
+    const Tensor& scores, const Tensor& knn_idx, Tensor& grad_points,
+    Tensor& grad_centers, Tensor& grad_scores);
 
 REGISTER_DEVICE_IMPL(assign_score_withk_forward_impl, CUDA,
                      assign_score_withk_forward_cuda);
@@ -67,30 +67,6 @@ void ball_query_forward_impl(int b, int n, int m, float min_radius,
                              Tensor idx);
 REGISTER_DEVICE_IMPL(ball_query_forward_impl, CUDA, ball_query_forward_cuda);
 
-void StackBallQueryForwardCUDAKernelLauncher(float max_radius, int nsample,
-                                             const Tensor new_xyz,
-                                             const Tensor new_xyz_batch_cnt,
-                                             const Tensor xyz,
-                                             const Tensor xyz_batch_cnt,
-                                             Tensor idx);
-
-void stack_ball_query_forward_cuda(float max_radius, int nsample,
-                                   const Tensor new_xyz,
-                                   const Tensor new_xyz_batch_cnt,
-                                   const Tensor xyz, const Tensor xyz_batch_cnt,
-                                   Tensor idx) {
-  StackBallQueryForwardCUDAKernelLauncher(
-      max_radius, nsample, new_xyz, new_xyz_batch_cnt, xyz, xyz_batch_cnt, idx);
-};
-
-void stack_ball_query_forward_impl(float max_radius, int nsample,
-                                   const Tensor new_xyz,
-                                   const Tensor new_xyz_batch_cnt,
-                                   const Tensor xyz, const Tensor xyz_batch_cnt,
-                                   Tensor idx);
-REGISTER_DEVICE_IMPL(stack_ball_query_forward_impl, CUDA,
-                     stack_ball_query_forward_cuda);
-
 void BBoxOverlapsCUDAKernelLauncher(const Tensor bboxes1, const Tensor bboxes2,
                                     Tensor ious, const int mode,
                                     const bool aligned, const int offset);
@@ -104,37 +80,37 @@ void bbox_overlaps_impl(const Tensor bboxes1, const Tensor bboxes2, Tensor ious,
                         const int mode, const bool aligned, const int offset);
 REGISTER_DEVICE_IMPL(bbox_overlaps_impl, CUDA, bbox_overlaps_cuda);
 
-void BorderAlignForwardCUDAKernelLauncher(const Tensor &input,
-                                          const Tensor &boxes, Tensor output,
+void BorderAlignForwardCUDAKernelLauncher(const Tensor& input,
+                                          const Tensor& boxes, Tensor output,
                                           Tensor argmax_idx,
                                           const int pool_size);
 
-void BorderAlignBackwardCUDAKernelLauncher(const Tensor &grad_output,
-                                           const Tensor &boxes,
-                                           const Tensor &argmax_idx,
+void BorderAlignBackwardCUDAKernelLauncher(const Tensor& grad_output,
+                                           const Tensor& boxes,
+                                           const Tensor& argmax_idx,
                                            Tensor grad_input,
                                            const int pool_size);
 
-void border_align_forward_cuda(const Tensor &input, const Tensor &boxes,
+void border_align_forward_cuda(const Tensor& input, const Tensor& boxes,
                                Tensor output, Tensor argmax_idx,
                                const int pool_size) {
   BorderAlignForwardCUDAKernelLauncher(input, boxes, output, argmax_idx,
                                        pool_size);
 }
 
-void border_align_backward_cuda(const Tensor &grad_output, const Tensor &boxes,
-                                const Tensor &argmax_idx, Tensor grad_input,
+void border_align_backward_cuda(const Tensor& grad_output, const Tensor& boxes,
+                                const Tensor& argmax_idx, Tensor grad_input,
                                 const int pool_size) {
   BorderAlignBackwardCUDAKernelLauncher(grad_output, boxes, argmax_idx,
                                         grad_input, pool_size);
 }
 
-void border_align_forward_impl(const Tensor &input, const Tensor &boxes,
+void border_align_forward_impl(const Tensor& input, const Tensor& boxes,
                                Tensor output, Tensor argmax_idx,
                                const int pool_size);
 
-void border_align_backward_impl(const Tensor &grad_output, const Tensor &boxes,
-                                const Tensor &argmax_idx, Tensor grad_input,
+void border_align_backward_impl(const Tensor& grad_output, const Tensor& boxes,
+                                const Tensor& argmax_idx, Tensor grad_input,
                                 const int pool_size);
 
 REGISTER_DEVICE_IMPL(border_align_forward_impl, CUDA,
@@ -148,13 +124,6 @@ void box_iou_rotated_cuda(const Tensor boxes1, const Tensor boxes2, Tensor ious,
 void box_iou_rotated_impl(const Tensor boxes1, const Tensor boxes2, Tensor ious,
                           const int mode_flag, const bool aligned);
 REGISTER_DEVICE_IMPL(box_iou_rotated_impl, CUDA, box_iou_rotated_cuda);
-
-void box_iou_quadri_cuda(const Tensor boxes1, const Tensor boxes2, Tensor ious,
-                         const int mode_flag, const bool aligned);
-
-void box_iou_quadri_impl(const Tensor boxes1, const Tensor boxes2, Tensor ious,
-                         const int mode_flag, const bool aligned);
-REGISTER_DEVICE_IMPL(box_iou_quadri_impl, CUDA, box_iou_quadri_cuda);
 
 void CARAFEForwardCUDAKernelLauncher(const Tensor features, const Tensor masks,
                                      Tensor rfeatures, Tensor routput,
@@ -472,18 +441,18 @@ REGISTER_DEVICE_IMPL(softmax_focal_loss_backward_impl, CUDA,
                      softmax_focal_loss_backward_cuda);
 
 void FurthestPointSamplingForwardCUDAKernelLauncher(int b, int n, int m,
-                                                    const float *dataset,
-                                                    float *temp, int *idxs);
+                                                    const float* dataset,
+                                                    float* temp, int* idxs);
 
 void FurthestPointSamplingWithDistForwardCUDAKernelLauncher(
-    int b, int n, int m, const float *dataset, float *temp, int *idxs);
+    int b, int n, int m, const float* dataset, float* temp, int* idxs);
 
 void furthest_point_sampling_forward_cuda(Tensor points_tensor,
                                           Tensor temp_tensor, Tensor idx_tensor,
                                           int b, int n, int m) {
-  const float *dataset = points_tensor.data_ptr<float>();
-  float *temp = temp_tensor.data_ptr<float>();
-  int *idxs = idx_tensor.data_ptr<int>();
+  const float* dataset = points_tensor.data_ptr<float>();
+  float* temp = temp_tensor.data_ptr<float>();
+  int* idxs = idx_tensor.data_ptr<int>();
   FurthestPointSamplingForwardCUDAKernelLauncher(b, n, m, dataset, temp, idxs);
 }
 
@@ -491,9 +460,9 @@ void furthest_point_sampling_with_dist_forward_cuda(Tensor points_tensor,
                                                     Tensor temp_tensor,
                                                     Tensor idx_tensor, int b,
                                                     int n, int m) {
-  const float *dataset = points_tensor.data_ptr<float>();
-  float *temp = temp_tensor.data_ptr<float>();
-  int *idxs = idx_tensor.data_ptr<int>();
+  const float* dataset = points_tensor.data_ptr<float>();
+  float* temp = temp_tensor.data_ptr<float>();
+  int* idxs = idx_tensor.data_ptr<int>();
   FurthestPointSamplingWithDistForwardCUDAKernelLauncher(b, n, m, dataset, temp,
                                                          idxs);
 }
@@ -512,42 +481,17 @@ REGISTER_DEVICE_IMPL(furthest_point_sampling_forward_impl, CUDA,
 REGISTER_DEVICE_IMPL(furthest_point_sampling_with_dist_forward_impl, CUDA,
                      furthest_point_sampling_with_dist_forward_cuda);
 
-torch::Tensor fused_bias_leakyrelu_op(const torch::Tensor &input,
-                                      const torch::Tensor &bias,
-                                      const torch::Tensor &refer, int act,
+torch::Tensor fused_bias_leakyrelu_op(const torch::Tensor& input,
+                                      const torch::Tensor& bias,
+                                      const torch::Tensor& refer, int act,
                                       int grad, float alpha, float scale);
 
-torch::Tensor fused_bias_leakyrelu_op_impl(const torch::Tensor &input,
-                                           const torch::Tensor &bias,
-                                           const torch::Tensor &refer, int act,
+torch::Tensor fused_bias_leakyrelu_op_impl(const torch::Tensor& input,
+                                           const torch::Tensor& bias,
+                                           const torch::Tensor& refer, int act,
                                            int grad, float alpha, float scale);
 REGISTER_DEVICE_IMPL(fused_bias_leakyrelu_op_impl, CUDA,
                      fused_bias_leakyrelu_op);
-
-torch::Tensor bias_act_op_impl(const torch::Tensor &input,
-                               const torch::Tensor &bias,
-                               const torch::Tensor &xref,
-                               const torch::Tensor &yref,
-                               const torch::Tensor &dy, int grad, int dim,
-                               int act, float alpha, float gain, float clamp);
-
-torch::Tensor bias_act_op(const torch::Tensor &input, const torch::Tensor &bias,
-                          const torch::Tensor &xref, const torch::Tensor &yref,
-                          const torch::Tensor &dy, int grad, int dim, int act,
-                          float alpha, float gain, float clamp);
-
-REGISTER_DEVICE_IMPL(bias_act_op_impl, CUDA, bias_act_op);
-
-torch::Tensor filtered_lrelu_act_op_impl(torch::Tensor x, torch::Tensor si,
-                                         int sx, int sy, float gain,
-                                         float slope, float clamp,
-                                         bool writeSigns);
-
-torch::Tensor filtered_lrelu_act_op(torch::Tensor x, torch::Tensor si, int sx,
-                                    int sy, float gain, float slope,
-                                    float clamp, bool writeSigns);
-
-REGISTER_DEVICE_IMPL(filtered_lrelu_act_op_impl, CUDA, filtered_lrelu_act_op);
 
 void GatherPointsForwardCUDAKernelLauncher(int b, int c, int n, int npoints,
                                            const Tensor points,
@@ -620,68 +564,20 @@ REGISTER_DEVICE_IMPL(group_points_forward_impl, CUDA,
 REGISTER_DEVICE_IMPL(group_points_backward_impl, CUDA,
                      group_points_backward_cuda);
 
-void StackGroupPointsForwardCUDAKernelLauncher(
-    int b, int c, int m, int nsample, const Tensor features_tensor,
-    const Tensor features_batch_cnt_tensor, const Tensor idx_tensor,
-    const Tensor idx_batch_cnt_tensor, Tensor out_tensor);
-void StackGroupPointsBackwardCUDAKernelLauncher(
-    int b, int c, int m, int n, int nsample, const Tensor grad_out_tensor,
-    const Tensor idx_tensor, const Tensor idx_batch_cnt_tensor,
-    const Tensor features_batch_cnt_tensor, Tensor grad_features_tensor);
-
-void stack_group_points_forward_cuda(int b, int c, int m, int nsample,
-                                     const Tensor features_tensor,
-                                     const Tensor features_batch_cnt_tensor,
-                                     const Tensor idx_tensor,
-                                     const Tensor idx_batch_cnt_tensor,
-                                     Tensor out_tensor) {
-  StackGroupPointsForwardCUDAKernelLauncher(
-      b, c, m, nsample, features_tensor, features_batch_cnt_tensor, idx_tensor,
-      idx_batch_cnt_tensor, out_tensor);
-};
-
-void stack_group_points_backward_cuda(int b, int c, int m, int n, int nsample,
-                                      const Tensor grad_out_tensor,
-                                      const Tensor idx_tensor,
-                                      const Tensor idx_batch_cnt_tensor,
-                                      const Tensor features_batch_cnt_tensor,
-                                      Tensor grad_features_tensor) {
-  StackGroupPointsBackwardCUDAKernelLauncher(
-      b, c, m, n, nsample, grad_out_tensor, idx_tensor, idx_batch_cnt_tensor,
-      features_batch_cnt_tensor, grad_features_tensor);
-};
-
-void stack_group_points_forward_impl(int b, int c, int m, int nsample,
-                                     const Tensor features_tensor,
-                                     const Tensor features_batch_cnt_tensor,
-                                     const Tensor idx_tensor,
-                                     const Tensor idx_batch_cnt_tensor,
-                                     Tensor out_tensor);
-
-void stack_group_points_backward_impl(int b, int c, int m, int n, int nsample,
-                                      const Tensor grad_out_tensor,
-                                      const Tensor idx_tensor,
-                                      const Tensor idx_batch_cnt_tensor,
-                                      const Tensor features_batch_cnt_tensor,
-                                      Tensor grad_features_tensor);
-
-REGISTER_DEVICE_IMPL(stack_group_points_forward_impl, CUDA,
-                     stack_group_points_forward_cuda);
-REGISTER_DEVICE_IMPL(stack_group_points_backward_impl, CUDA,
-                     stack_group_points_backward_cuda);
-
 void IoU3DBoxesOverlapBevForwardCUDAKernelLauncher(const int num_a,
                                                    const Tensor boxes_a,
                                                    const int num_b,
                                                    const Tensor boxes_b,
                                                    Tensor ans_overlap);
 
-void IoU3DNMS3DForwardCUDAKernelLauncher(const Tensor boxes, Tensor &keep,
-                                         Tensor &keep_num,
+void IoU3DNMS3DForwardCUDAKernelLauncher(const Tensor boxes,
+                                         unsigned long long* mask,
+                                         int boxes_num,
                                          float nms_overlap_thresh);
 
-void IoU3DNMS3DNormalForwardCUDAKernelLauncher(const Tensor boxes, Tensor &keep,
-                                               Tensor &keep_num,
+void IoU3DNMS3DNormalForwardCUDAKernelLauncher(const Tensor boxes,
+                                               unsigned long long* mask,
+                                               int boxes_num,
                                                float nms_overlap_thresh);
 
 void iou3d_boxes_overlap_bev_forward_cuda(const int num_a, const Tensor boxes_a,
@@ -691,16 +587,16 @@ void iou3d_boxes_overlap_bev_forward_cuda(const int num_a, const Tensor boxes_a,
                                                 ans_overlap);
 };
 
-void iou3d_nms3d_forward_cuda(const Tensor boxes, Tensor &keep,
-                              Tensor &keep_num, float nms_overlap_thresh) {
-  IoU3DNMS3DForwardCUDAKernelLauncher(boxes, keep, keep_num,
+void iou3d_nms3d_forward_cuda(const Tensor boxes, unsigned long long* mask,
+                              int boxes_num, float nms_overlap_thresh) {
+  IoU3DNMS3DForwardCUDAKernelLauncher(boxes, mask, boxes_num,
                                       nms_overlap_thresh);
 };
 
-void iou3d_nms3d_normal_forward_cuda(const Tensor boxes, Tensor &keep,
-                                     Tensor &keep_num,
+void iou3d_nms3d_normal_forward_cuda(const Tensor boxes,
+                                     unsigned long long* mask, int boxes_num,
                                      float nms_overlap_thresh) {
-  IoU3DNMS3DNormalForwardCUDAKernelLauncher(boxes, keep, keep_num,
+  IoU3DNMS3DNormalForwardCUDAKernelLauncher(boxes, mask, boxes_num,
                                             nms_overlap_thresh);
 };
 
@@ -708,11 +604,11 @@ void iou3d_boxes_overlap_bev_forward_impl(const int num_a, const Tensor boxes_a,
                                           const int num_b, const Tensor boxes_b,
                                           Tensor ans_overlap);
 
-void iou3d_nms3d_forward_impl(const Tensor boxes, Tensor &keep,
-                              Tensor &keep_num, float nms_overlap_thresh);
+void iou3d_nms3d_forward_impl(const Tensor boxes, unsigned long long* mask,
+                              int boxes_num, float nms_overlap_thresh);
 
-void iou3d_nms3d_normal_forward_impl(const Tensor boxes, Tensor &keep,
-                                     Tensor &keep_num,
+void iou3d_nms3d_normal_forward_impl(const Tensor boxes,
+                                     unsigned long long* mask, int boxes_num,
                                      float nms_overlap_thresh);
 
 REGISTER_DEVICE_IMPL(iou3d_boxes_overlap_bev_forward_impl, CUDA,
@@ -837,31 +733,31 @@ REGISTER_DEVICE_IMPL(modulated_deformable_col2im_impl, CUDA,
 REGISTER_DEVICE_IMPL(modulated_deformable_col2im_coord_impl, CUDA,
                      modulated_deformable_col2im_coord_cuda);
 
-Tensor ms_deform_attn_cuda_forward(const Tensor &value,
-                                   const Tensor &spatial_shapes,
-                                   const Tensor &level_start_index,
-                                   const Tensor &sampling_loc,
-                                   const Tensor &attn_weight,
+Tensor ms_deform_attn_cuda_forward(const Tensor& value,
+                                   const Tensor& spatial_shapes,
+                                   const Tensor& level_start_index,
+                                   const Tensor& sampling_loc,
+                                   const Tensor& attn_weight,
                                    const int im2col_step);
 
 void ms_deform_attn_cuda_backward(
-    const Tensor &value, const Tensor &spatial_shapes,
-    const Tensor &level_start_index, const Tensor &sampling_loc,
-    const Tensor &attn_weight, const Tensor &grad_output, Tensor &grad_value,
-    Tensor &grad_sampling_loc, Tensor &grad_attn_weight, const int im2col_step);
+    const Tensor& value, const Tensor& spatial_shapes,
+    const Tensor& level_start_index, const Tensor& sampling_loc,
+    const Tensor& attn_weight, const Tensor& grad_output, Tensor& grad_value,
+    Tensor& grad_sampling_loc, Tensor& grad_attn_weight, const int im2col_step);
 
-Tensor ms_deform_attn_impl_forward(const Tensor &value,
-                                   const Tensor &spatial_shapes,
-                                   const Tensor &level_start_index,
-                                   const Tensor &sampling_loc,
-                                   const Tensor &attn_weight,
+Tensor ms_deform_attn_impl_forward(const Tensor& value,
+                                   const Tensor& spatial_shapes,
+                                   const Tensor& level_start_index,
+                                   const Tensor& sampling_loc,
+                                   const Tensor& attn_weight,
                                    const int im2col_step);
 
 void ms_deform_attn_impl_backward(
-    const Tensor &value, const Tensor &spatial_shapes,
-    const Tensor &level_start_index, const Tensor &sampling_loc,
-    const Tensor &attn_weight, const Tensor &grad_output, Tensor &grad_value,
-    Tensor &grad_sampling_loc, Tensor &grad_attn_weight, const int im2col_step);
+    const Tensor& value, const Tensor& spatial_shapes,
+    const Tensor& level_start_index, const Tensor& sampling_loc,
+    const Tensor& attn_weight, const Tensor& grad_output, Tensor& grad_value,
+    Tensor& grad_sampling_loc, Tensor& grad_attn_weight, const int im2col_step);
 
 REGISTER_DEVICE_IMPL(ms_deform_attn_impl_forward, CUDA,
                      ms_deform_attn_cuda_forward);
@@ -1269,26 +1165,26 @@ REGISTER_DEVICE_IMPL(roi_pool_backward_impl, CUDA, roi_pool_backward_cuda);
 typedef enum { SUM = 0, MEAN = 1, MAX = 2 } reduce_t;
 
 std::vector<at::Tensor> DynamicPointToVoxelForwardCUDAKernelLauncher(
-    const at::Tensor &feats, const at::Tensor &coors,
+    const at::Tensor& feats, const at::Tensor& coors,
     const reduce_t reduce_type);
 
 void DynamicPointToVoxelBackwardCUDAKernelLauncher(
-    at::Tensor &grad_feats, const at::Tensor &grad_reduced_feats,
-    const at::Tensor &feats, const at::Tensor &reduced_feats,
-    const at::Tensor &coors_map, const at::Tensor &reduce_count,
+    at::Tensor& grad_feats, const at::Tensor& grad_reduced_feats,
+    const at::Tensor& feats, const at::Tensor& reduced_feats,
+    const at::Tensor& coors_map, const at::Tensor& reduce_count,
     const reduce_t reduce_type);
 
 std::vector<torch::Tensor> dynamic_point_to_voxel_forward_cuda(
-    const torch::Tensor &feats, const torch::Tensor &coors,
+    const torch::Tensor& feats, const torch::Tensor& coors,
     const reduce_t reduce_type) {
   return DynamicPointToVoxelForwardCUDAKernelLauncher(feats, coors,
                                                       reduce_type);
 };
 
 void dynamic_point_to_voxel_backward_cuda(
-    torch::Tensor &grad_feats, const torch::Tensor &grad_reduced_feats,
-    const torch::Tensor &feats, const torch::Tensor &reduced_feats,
-    const torch::Tensor &coors_idx, const torch::Tensor &reduce_count,
+    torch::Tensor& grad_feats, const torch::Tensor& grad_reduced_feats,
+    const torch::Tensor& feats, const torch::Tensor& reduced_feats,
+    const torch::Tensor& coors_idx, const torch::Tensor& reduce_count,
     const reduce_t reduce_type) {
   DynamicPointToVoxelBackwardCUDAKernelLauncher(grad_feats, grad_reduced_feats,
                                                 feats, reduced_feats, coors_idx,
@@ -1296,13 +1192,13 @@ void dynamic_point_to_voxel_backward_cuda(
 };
 
 std::vector<torch::Tensor> dynamic_point_to_voxel_forward_impl(
-    const torch::Tensor &feats, const torch::Tensor &coors,
+    const torch::Tensor& feats, const torch::Tensor& coors,
     const reduce_t reduce_type);
 
 void dynamic_point_to_voxel_backward_impl(
-    torch::Tensor &grad_feats, const torch::Tensor &grad_reduced_feats,
-    const torch::Tensor &feats, const torch::Tensor &reduced_feats,
-    const torch::Tensor &coors_idx, const torch::Tensor &reduce_count,
+    torch::Tensor& grad_feats, const torch::Tensor& grad_reduced_feats,
+    const torch::Tensor& feats, const torch::Tensor& reduced_feats,
+    const torch::Tensor& coors_idx, const torch::Tensor& reduce_count,
     const reduce_t reduce_type);
 
 REGISTER_DEVICE_IMPL(dynamic_point_to_voxel_forward_impl, CUDA,
@@ -1468,36 +1364,37 @@ void tin_shift_backward_impl(Tensor grad_output, Tensor shift,
 REGISTER_DEVICE_IMPL(tin_shift_forward_impl, CUDA, tin_shift_forward_cuda);
 REGISTER_DEVICE_IMPL(tin_shift_backward_impl, CUDA, tin_shift_backward_cuda);
 
-torch::Tensor upfirdn2d_op(torch::Tensor input, torch::Tensor filter, int upx,
-                           int upy, int downx, int downy, int padx0, int padx1,
-                           int pady0, int pady1, bool flip, float gain);
+torch::Tensor upfirdn2d_op(const torch::Tensor& input,
+                           const torch::Tensor& kernel, int up_x, int up_y,
+                           int down_x, int down_y, int pad_x0, int pad_x1,
+                           int pad_y0, int pad_y1);
 
-torch::Tensor upfirdn2d_op_impl(torch::Tensor input, torch::Tensor filter,
-                                int upx, int upy, int downx, int downy,
-                                int padx0, int padx1, int pady0, int pady1,
-                                bool flip, float gain);
+torch::Tensor upfirdn2d_op_impl(const torch::Tensor& input,
+                                const torch::Tensor& kernel, int up_x, int up_y,
+                                int down_x, int down_y, int pad_x0, int pad_x1,
+                                int pad_y0, int pad_y1);
 REGISTER_DEVICE_IMPL(upfirdn2d_op_impl, CUDA, upfirdn2d_op);
 
 int HardVoxelizeForwardCUDAKernelLauncher(
-    const at::Tensor &points, at::Tensor &voxels, at::Tensor &coors,
-    at::Tensor &num_points_per_voxel, const std::vector<float> voxel_size,
+    const at::Tensor& points, at::Tensor& voxels, at::Tensor& coors,
+    at::Tensor& num_points_per_voxel, const std::vector<float> voxel_size,
     const std::vector<float> coors_range, const int max_points,
     const int max_voxels, const int NDim = 3);
 
 int NondeterministicHardVoxelizeForwardCUDAKernelLauncher(
-    const at::Tensor &points, at::Tensor &voxels, at::Tensor &coors,
-    at::Tensor &num_points_per_voxel, const std::vector<float> voxel_size,
+    const at::Tensor& points, at::Tensor& voxels, at::Tensor& coors,
+    at::Tensor& num_points_per_voxel, const std::vector<float> voxel_size,
     const std::vector<float> coors_range, const int max_points,
     const int max_voxels, const int NDim = 3);
 
 void DynamicVoxelizeForwardCUDAKernelLauncher(
-    const at::Tensor &points, at::Tensor &coors,
+    const at::Tensor& points, at::Tensor& coors,
     const std::vector<float> voxel_size, const std::vector<float> coors_range,
     const int NDim = 3);
 
-int hard_voxelize_forward_cuda(const at::Tensor &points, at::Tensor &voxels,
-                               at::Tensor &coors,
-                               at::Tensor &num_points_per_voxel,
+int hard_voxelize_forward_cuda(const at::Tensor& points, at::Tensor& voxels,
+                               at::Tensor& coors,
+                               at::Tensor& num_points_per_voxel,
                                const std::vector<float> voxel_size,
                                const std::vector<float> coors_range,
                                const int max_points, const int max_voxels,
@@ -1508,8 +1405,8 @@ int hard_voxelize_forward_cuda(const at::Tensor &points, at::Tensor &voxels,
 };
 
 int nondeterministic_hard_voxelize_forward_cuda(
-    const at::Tensor &points, at::Tensor &voxels, at::Tensor &coors,
-    at::Tensor &num_points_per_voxel, const std::vector<float> voxel_size,
+    const at::Tensor& points, at::Tensor& voxels, at::Tensor& coors,
+    at::Tensor& num_points_per_voxel, const std::vector<float> voxel_size,
     const std::vector<float> coors_range, const int max_points,
     const int max_voxels, const int NDim) {
   return NondeterministicHardVoxelizeForwardCUDAKernelLauncher(
@@ -1517,7 +1414,7 @@ int nondeterministic_hard_voxelize_forward_cuda(
       max_points, max_voxels, NDim);
 };
 
-void dynamic_voxelize_forward_cuda(const at::Tensor &points, at::Tensor &coors,
+void dynamic_voxelize_forward_cuda(const at::Tensor& points, at::Tensor& coors,
                                    const std::vector<float> voxel_size,
                                    const std::vector<float> coors_range,
                                    const int NDim) {
@@ -1525,21 +1422,21 @@ void dynamic_voxelize_forward_cuda(const at::Tensor &points, at::Tensor &coors,
                                            coors_range, NDim);
 };
 
-int hard_voxelize_forward_impl(const at::Tensor &points, at::Tensor &voxels,
-                               at::Tensor &coors,
-                               at::Tensor &num_points_per_voxel,
+int hard_voxelize_forward_impl(const at::Tensor& points, at::Tensor& voxels,
+                               at::Tensor& coors,
+                               at::Tensor& num_points_per_voxel,
                                const std::vector<float> voxel_size,
                                const std::vector<float> coors_range,
                                const int max_points, const int max_voxels,
                                const int NDim);
 
 int nondeterministic_hard_voxelize_forward_impl(
-    const at::Tensor &points, at::Tensor &voxels, at::Tensor &coors,
-    at::Tensor &num_points_per_voxel, const std::vector<float> voxel_size,
+    const at::Tensor& points, at::Tensor& voxels, at::Tensor& coors,
+    at::Tensor& num_points_per_voxel, const std::vector<float> voxel_size,
     const std::vector<float> coors_range, const int max_points,
     const int max_voxels, const int NDim);
 
-void dynamic_voxelize_forward_impl(const at::Tensor &points, at::Tensor &coors,
+void dynamic_voxelize_forward_impl(const at::Tensor& points, at::Tensor& coors,
                                    const std::vector<float> voxel_size,
                                    const std::vector<float> coors_range,
                                    const int NDim);
@@ -1809,8 +1706,8 @@ void ChamferDistanceForwardCUDAKernelLauncher(
     const Tensor dist2, const Tensor idx1, const Tensor idx2);
 
 void ChamferDistanceBackwardCUDAKernelLauncher(
-    const Tensor xyz1, const Tensor xyz2, Tensor idx1, Tensor idx2,
-    Tensor grad_dist1, Tensor grad_dist2, Tensor grad_xyz1, Tensor grad_xyz2);
+    const Tensor xyz1, const Tensor xyz2, Tensor grad_xyz1, Tensor grad_xyz2,
+    Tensor grad_dist1, Tensor grad_dist2, Tensor idx1, Tensor idx2);
 
 void chamfer_distance_forward_cuda(const Tensor xyz1, const Tensor xyz2,
                                    const Tensor dist1, const Tensor dist2,
@@ -1820,11 +1717,11 @@ void chamfer_distance_forward_cuda(const Tensor xyz1, const Tensor xyz2,
 };
 
 void chamfer_distance_backward_cuda(const Tensor xyz1, const Tensor xyz2,
-                                    Tensor idx1, Tensor idx2, Tensor graddist1,
-                                    Tensor graddist2, Tensor gradxyz1,
-                                    Tensor gradxyz2) {
-  ChamferDistanceBackwardCUDAKernelLauncher(xyz1, xyz2, idx1, idx2, graddist1,
-                                            graddist2, gradxyz1, gradxyz2);
+                                    Tensor gradxyz1, Tensor gradxyz2,
+                                    Tensor graddist1, Tensor graddist2,
+                                    Tensor idx1, Tensor idx2) {
+  ChamferDistanceBackwardCUDAKernelLauncher(xyz1, xyz2, gradxyz1, gradxyz2,
+                                            graddist1, graddist2, idx1, idx2);
 };
 
 void chamfer_distance_forward_impl(const Tensor xyz1, const Tensor xyz2,
@@ -1832,87 +1729,11 @@ void chamfer_distance_forward_impl(const Tensor xyz1, const Tensor xyz2,
                                    const Tensor idx1, const Tensor idx2);
 
 void chamfer_distance_backward_impl(const Tensor xyz1, const Tensor xyz2,
-                                    Tensor idx1, Tensor idx2, Tensor graddist1,
-                                    Tensor graddist2, Tensor gradxyz1,
-                                    Tensor gradxyz2);
+                                    Tensor gradxyz1, Tensor gradxyz2,
+                                    Tensor graddist1, Tensor graddist2,
+                                    Tensor idx1, Tensor idx2);
 
 REGISTER_DEVICE_IMPL(chamfer_distance_forward_impl, CUDA,
                      chamfer_distance_forward_cuda);
 REGISTER_DEVICE_IMPL(chamfer_distance_backward_impl, CUDA,
                      chamfer_distance_backward_cuda);
-
-void PrROIPoolForwardCUDAKernelLauncher(Tensor input, Tensor rois,
-                                        Tensor output, int pooled_height,
-                                        int pooled_width, float spatial_scale);
-
-void PrROIPoolBackwardCUDAKernelLauncher(Tensor grad_output, Tensor rois,
-                                         Tensor grad_input, int pooled_height,
-                                         int pooled_width, float spatial_scale);
-
-void PrROIPoolCoorBackwardCUDAKernelLauncher(
-    Tensor output, Tensor grad_output, Tensor input, Tensor rois,
-    Tensor grad_rois, int pooled_height, int pooled_width, float spatial_scale);
-
-void prroi_pool_forward_cuda(Tensor input, Tensor rois, Tensor output,
-                             int pooled_height, int pooled_width,
-                             float spatial_scale) {
-  PrROIPoolForwardCUDAKernelLauncher(input, rois, output, pooled_height,
-                                     pooled_width, spatial_scale);
-}
-
-void prroi_pool_backward_cuda(Tensor grad_output, Tensor rois,
-                              Tensor grad_input, int pooled_height,
-                              int pooled_width, float spatial_scale) {
-  PrROIPoolBackwardCUDAKernelLauncher(grad_output, rois, grad_input,
-                                      pooled_height, pooled_width,
-                                      spatial_scale);
-}
-
-void prroi_pool_coor_backward_cuda(Tensor output, Tensor grad_output,
-                                   Tensor input, Tensor rois, Tensor grad_rois,
-                                   int pooled_height, int pooled_width,
-                                   float spatial_scale) {
-  PrROIPoolCoorBackwardCUDAKernelLauncher(output, grad_output, input, rois,
-                                          grad_rois, pooled_height,
-                                          pooled_width, spatial_scale);
-}
-
-void prroi_pool_forward_impl(Tensor input, Tensor rois, Tensor output,
-                             int pooled_height, int pooled_width,
-                             float spatial_scale);
-void prroi_pool_backward_impl(Tensor grad_output, Tensor rois,
-                              Tensor grad_input, int pooled_height,
-                              int pooled_width, float spatial_scale);
-void prroi_pool_coor_backward_impl(Tensor output, Tensor grad_output,
-                                   Tensor input, Tensor rois, Tensor grad_rois,
-                                   int pooled_height, int pooled_width,
-                                   float spatial_scale);
-REGISTER_DEVICE_IMPL(prroi_pool_forward_impl, CUDA, prroi_pool_forward_cuda);
-REGISTER_DEVICE_IMPL(prroi_pool_backward_impl, CUDA, prroi_pool_backward_cuda);
-REGISTER_DEVICE_IMPL(prroi_pool_coor_backward_impl, CUDA,
-                     prroi_pool_coor_backward_cuda);
-
-void BezierAlignForwardCUDAKernelLauncher(Tensor input, Tensor rois,
-                                          Tensor output, int aligned_height,
-                                          int aligned_width,
-                                          float spatial_scale,
-                                          int sampling_ratio, bool aligned);
-
-void BezierAlignBackwardCUDAKernelLauncher(
-    Tensor grad_output, Tensor rois, Tensor grad_input, int aligned_height,
-    int aligned_width, float spatial_scale, int sampling_ratio, bool aligned);
-
-void bezier_align_forward_impl(Tensor input, Tensor rois, Tensor output,
-                               int aligned_height, int aligned_width,
-                               float spatial_scale, int sampling_ratio,
-                               bool aligned);
-
-void bezier_align_backward_impl(Tensor grad_output, Tensor rois,
-                                Tensor grad_input, int aligned_height,
-                                int aligned_width, float spatial_scale,
-                                int sampling_ratio, bool aligned);
-
-REGISTER_DEVICE_IMPL(bezier_align_forward_impl, CUDA,
-                     BezierAlignForwardCUDAKernelLauncher);
-REGISTER_DEVICE_IMPL(bezier_align_backward_impl, CUDA,
-                     BezierAlignBackwardCUDAKernelLauncher);

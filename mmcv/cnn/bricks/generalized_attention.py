@@ -5,16 +5,17 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from mmengine.model import kaiming_init
-from mmengine.registry import MODELS
+
+from ..utils import kaiming_init
+from .registry import PLUGIN_LAYERS
 
 
-@MODELS.register_module()
+@PLUGIN_LAYERS.register_module()
 class GeneralizedAttention(nn.Module):
     """GeneralizedAttention module.
 
     See 'An Empirical Study of Spatial Attention Mechanisms in Deep Networks'
-    (https://arxiv.org/abs/1904.05873) for details.
+    (https://arxiv.org/abs/1711.07971) for details.
 
     Args:
         in_channels (int): Channels of the input feature map.

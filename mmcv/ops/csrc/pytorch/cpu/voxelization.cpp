@@ -90,7 +90,7 @@ void hard_voxelize_forward_cpu_kernel(
 
     // put points into voxel
     num = num_points_per_voxel[voxelidx];
-    if (max_points == -1 || num < max_points) {
+    if (max_points == -1 || (num < max_points)) {
       // memcpy will cause problem because of the memory distribution
       // discontinuity of TensorAccessor, so here using loops to replace memcpy
       for (int k = 0; k < num_features; ++k) {

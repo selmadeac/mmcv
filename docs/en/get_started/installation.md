@@ -2,347 +2,183 @@
 
 There are two versions of MMCV:
 
-- **mmcv**: comprehensive, with full features and various CUDA ops out of box. It takes longer time to build.
-- **mmcv-lite**: lite, without CUDA ops but all other features, similar to mmcv\<1.0.0. It is useful when you do not need those CUDA ops.
+- **mmcv-full**: comprehensive, with full features and various CUDA ops out of box. It takes longer time to build.
+- **mmcv**: lite, without CUDA ops but all other features, similar to mmcv\<1.0.0. It is useful when you do not need those CUDA ops.
 
 ```{warning}
 Do not install both versions in the same environment, otherwise you may encounter errors like `ModuleNotFound`. You need to uninstall one before installing the other. `Installing the full version is highly recommended if CUDA is avaliable`.
 ```
 
-### Install mmcv
+a. Install the full version.
 
-Before installing mmcv, make sure that PyTorch has been successfully installed following the [PyTorch official installation guide](https://pytorch.org/get-started/locally/#start-locally). This can be verified using the following command
+Before installing mmcv-full, make sure that PyTorch has been successfully installed following the [official guide](https://pytorch.org/).
 
-```bash
-python -c 'import torch;print(torch.__version__)'
+We provide pre-built mmcv packages (recommended) with different PyTorch and CUDA versions to simplify the building for **Linux and Windows systems**. In addition, you can run [check_installation.py](.dev_scripts/check_installation.py) to check the installation of mmcv-full after running the installation commands.
+
+i. Install the latest version.
+
+The rule for installing the latest `mmcv-full` is as follows:
+
+```shell
+pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/{cu_version}/{torch_version}/index.html
 ```
 
-If version information is output, then PyTorch is installed.
+Please replace `{cu_version}` and `{torch_version}` in the url to your desired one. For example,
+to install the latest `mmcv-full` with `CUDA 11.1` and `PyTorch 1.9.0`, use the following command:
 
-#### Install with mim (recommended)
-
-[mim](https://github.com/open-mmlab/mim) is the package management tool for the OpenMMLab projects, which makes it easy to install mmcv
-
-```bash
-pip install -U openmim
-mim install mmcv
+```shell
+pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu111/torch1.9.0/index.html
 ```
 
-If you find that the above installation command does not use a pre-built package ending with `.whl` but a source package ending with `.tar.gz`, you may not have a pre-build package corresponding to the PyTorch or CUDA or mmcv version, in which case you can [build mmcv from source](build.md).
+For more details, please refer the the following tables and delete `=={mmcv_version}`.
 
-<details>
-<summary>Installation log using pre-built packages</summary>
+ii. Install a specified version.
 
-Looking in links: https://download.openmmlab.com/mmcv/dist/cu102/torch1.8.0/index.html<br />
-Collecting mmcv<br />
-<b>Downloading https://download.openmmlab.com/mmcv/dist/cu102/torch1.8.0/mmcv-2.0.0-cp38-cp38-manylinux1_x86_64.whl</b>
+The rule for installing a specified `mmcv-full` is as follows:
 
-</details>
-
-<details>
-<summary>Installation log using source packages</summary>
-
-Looking in links: https://download.openmmlab.com/mmcv/dist/cu102/torch1.8.0/index.html<br />
-Collecting mmcv==2.0.0<br />
-<b>Downloading mmcv-2.0.0.tar.gz</b>
-
-</details>
-
-To install a specific version of mmcv, for example, mmcv version 2.0.0, you can use the following command
-
-```bash
-mim install mmcv==2.0.0
+```shell
+pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/{cu_version}/{torch_version}/index.html
 ```
 
-:::{note}
-If you would like to use `opencv-python-headless` instead of `opencv-python`,
-e.g., in a minimum container environment or servers without GUI,
-you can first install it before installing MMCV to skip the installation of `opencv-python`.
+First of all, please refer to the Releases and replace `{mmcv_version}` a specified one. e.g. `1.3.9`.
+Then replace `{cu_version}` and `{torch_version}` in the url to your desired versions. For example,
+to install `mmcv-full==1.3.9` with `CUDA 11.1` and `PyTorch 1.9.0`, use the following command:
 
-Alternatively, if it takes too long to install a dependency library, you can specify the pypi source
-
-```bash
-mim install mmcv -i https://pypi.tuna.tsinghua.edu.cn/simple
+```shell
+pip install mmcv-full==1.3.9 -f https://download.openmmlab.com/mmcv/dist/cu111/torch1.9.0/index.html
 ```
 
-:::
-
-You can run [check_installation.py](https://github.com/open-mmlab/mmcv/blob/main/.dev_scripts/check_installation.py) to check the installation of mmcv-full after running the installation commands.
-
-#### Install with pip
-
-Use the following command to check the version of CUDA and PyTorch
-
-```bash
-python -c 'import torch;print(torch.__version__);print(torch.version.cuda)'
-```
-
-Select the appropriate installation command depending on the type of system, CUDA version, PyTorch version, and MMCV version
-
-<html>
-<body>
-    <style>
-      select {
-          z-index: 1000;
-          position: absolute;
-          top: 10px;
-          width: 6.7rem;
-      }
-      #select-container {
-          position: relative;
-          height: 30px;
-      }
-      #select-cmd {
-          background-color: #f5f6f7;
-          font-size: 14px;
-          margin-top: 20px;
-      }
-      /* 让每一个都间隔1.3rem */
-      #select-os {
-          /* left: 1.375rem; */
-          left: 0;
-      }
-      #select-cuda {
-          /* left: 9.375rem;    9.375 = 1.375 + 6.7 + 1.3 */
-          left: 8rem;
-      }
-      #select-torch {
-          /* left: 17.375rem;    17.375 = 9.375 + 6.7 + 1.3 */
-          left: 16rem;
-      }
-      #select-mmcv {
-          /* left: 25.375rem;    25.375 = 17.375 + 6.7 + 1.3 */
-          left: 24rem;
-      }
-    </style>
-    <div id="select-container">
-        <select
-            onmousedown="handleSelectMouseDown(this.id)"
-            onblur="handleSelectBlur(this.id)"
-            onchange="changeOS(this.value)"
-            id="select-os">
-        </select>
-        <select
-            onmousedown="handleSelectMouseDown(this.id)"
-            onblur="handleSelectBlur(this.id)"
-            onchange="changeCUDA(this.value)"
-            id="select-cuda">
-        </select>
-        <select
-            onmousedown="handleSelectMouseDown(this.id)"
-            onblur="handleSelectBlur(this.id)"
-            onchange="changeTorch(this.value)"
-            id="select-torch">
-        </select>
-        <select
-            onmousedown="handleSelectMouseDown(this.id)"
-            onblur="handleSelectBlur(this.id)"
-            onchange="changeMMCV(this.value)"
-            id="select-mmcv">
-        </select>
-    </div>
-    <pre id="select-cmd"></pre>
-</body>
-<script>
-    let osVal, cudaVal, torchVal, mmcvVal;
-    function changeMMCV(val) {
-        mmcvVal = val;
-        change("select-mmcv");
-    }
-    function changeTorch(val) {
-        torchVal = val;
-        change("select-torch");
-    }
-    function changeCUDA(val) {
-        cudaVal = val;
-        change("select-cuda");
-    }
-    function changeOS(val) {
-        osVal = val;
-        change("select-os");
-    }
-    function handleSelectMouseDown(id) {
-        const dom = document.getElementById(id);
-        if (!dom) return;
-        const len = dom?.options?.length;
-        if (len >= 9) {
-            dom.size = 10;
-            dom.style.zIndex = 100;
-        }
-    }
-    function handleSelectClick() {
-        const selects = Array.from(document.getElementsByTagName("select"));
-        selects.forEach(select => {
-            select.size = 1;
-        });
-    }
-    function handleSelectBlur(id) {
-        const dom = document.getElementById(id);
-        if (!dom) {
-            handleSelectClick();
-            return;
-        }
-        dom.size = 1;
-        dom.style.zIndex = 1;
-    }
-    function changeCmd() {
-        const cmd = document.getElementById("select-cmd");
-        let cmdString = "pip install mmcv=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/{cu_version}/{torch_version}/index.html";
-        // e.g: pip install mmcv==2.0.0rc1 -f https://download.openmmlab.com/mmcv/dist/cu111/torch1.9/index.html
-        let cudaVersion;
-        if (cudaVal === "cpu" || cudaVal === "mps") {
-            cudaVersion = "cpu";
-        } else {
-            cudaVersion = `cu${cudaVal.split(".").join("")}`;
-        }
-        const torchVersion = `torch${torchVal.substring(0, torchVal.length - 2)}`;
-        cmdString = cmdString.replace("{cu_version}", cudaVersion).replace("{mmcv_version}", mmcvVal).replace("{torch_version}", torchVersion);
-        cmd.textContent = cmdString;
-    }
-    function unique(arr) {
-        if (!arr || !Array.isArray(arr)) return [];
-        return [...new Set(arr)];
-    }
-    function genOptionFragment(data, id) {
-        const name = id.includes("-")? id.split("-")[1] : id;
-        const fragment = new DocumentFragment();
-        data.forEach(option => {
-            const ele = document.createElement("option");
-            let text = `${name} ${option}`;
-            if (name === "os" || option.toUpperCase() === "CPU" || option.toUpperCase() === "MPS") {
-                text = `${option}`;
-            }
-            ele.textContent = text;
-            ele.value = option;
-            ele.addEventListener('click', handleSelectClick);
-            fragment.appendChild(ele);
-        });
-        return fragment;
-    }
-    function findAndAppend(data, id) {
-        const fragment = genOptionFragment(data, id);
-        const dom = document.getElementById(id);
-        if (dom) dom.replaceChildren(fragment);
-    }
-    function change(id) {
-        const order = ["select-mmcv", "select-torch", "select-cuda", "select-os"];
-        const idx = order.indexOf(id);
-        if (idx === -1) return;
-        const versionDetail = version[osVal];
-        if (idx >= 3) {
-            let cuda = [];
-            versionDetail.forEach(v => {
-                cuda.push(v.cuda);
-            });
-            cuda = unique(cuda);
-            cudaVal = cuda[0];
-            findAndAppend(cuda, "select-cuda");
-        }
-        if (idx >= 2) {
-            const torch = [];
-            versionDetail.forEach(v => {
-                if (v.cuda === cudaVal) torch.push(v.torch);
-            });
-            torchVal = torch[0];
-            findAndAppend(torch, "select-torch");
-        }
-        if (idx >= 1) {
-            let mmcv = [];
-            versionDetail.forEach(v => {
-                if (v.cuda === cudaVal && v.torch === torchVal) mmcv = v.mmcv;
-            });
-            mmcvVal = mmcv[0];
-            findAndAppend(mmcv, "select-mmcv");
-        }
-        changeCmd();
-    }
-    function init() {
-        document.addEventListener("click", handleSelectBlur);
-        const version = window.version;
-        const os = Object.keys(version);
-        osVal = os[0];
-        findAndAppend(os, "select-os");
-        change("select-os");
-        changeCmd();
-    }
-    window.onload = function () {
-        const url = "../_static/version.json"
-        const request = new XMLHttpRequest();
-        request.open("get", url);
-        request.send(null);
-        request.onload = function () {
-            if (request.status !== 200) return;
-            const data = JSON.parse(request.responseText);
-            window.version = data;
-            init();
-        }
-    }
-</script>
-</html>
-
-If you do not find a corresponding version in the dropdown box above, you probably do not have a pre-built package corresponding to the PyTorch or CUDA or mmcv version, at which point you can [build mmcv from source](build.md).
-
-:::{note}
-mmcv is only compiled on PyTorch 1.x.0 because the compatibility
+```{note}
+mmcv-full is only compiled on PyTorch 1.x.0 because the compatibility
 usually holds between 1.x.0 and 1.x.1. If your PyTorch version is 1.x.1, you
-can install mmcv compiled with PyTorch 1.x.0 and it usually works well.
-For example, if your PyTorch version is 1.8.1, you can feel free to choose 1.8.x.
-:::
+can install mmcv-full compiled with PyTorch 1.x.0 and it usually works well.
+For example, if your PyTorch version is 1.8.1 and CUDA version is 11.1, you
+can use the following command to install mmcv-full.
 
-:::{note}
-If you would like to use `opencv-python-headless` instead of `opencv-python`,
-e.g., in a minimum container environment or servers without GUI,
-you can first install it before installing MMCV to skip the installation of `opencv-python`.
-
-Alternatively, if it takes too long to install a dependency library, you can specify the pypi source
-
-```bash
-mim install mmcv -i https://pypi.tuna.tsinghua.edu.cn/simple
+`pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu111/torch1.8.0/index.html`
 ```
 
-:::
+For more details, please refer the the following tables.
 
-You can run [check_installation.py](https://github.com/open-mmlab/mmcv/blob/main/.dev_scripts/check_installation.py) to check the installation of mmcv after running the installation commands.
+<table class="docutils">
+  <tbody>
+    <tr>
+      <th width="80"> CUDA </th>
+      <th valign="bottom" align="left" width="120">torch 1.11</th>
+      <th valign="bottom" align="left" width="120">torch 1.10</th>
+      <th valign="bottom" align="left" width="120">torch 1.9</th>
+      <th valign="bottom" align="left" width="120">torch 1.8</th>
+      <th valign="bottom" align="left" width="120">torch 1.7</th>
+      <th valign="bottom" align="left" width="120">torch 1.6</th>
+      <th valign="bottom" align="left" width="120">torch 1.5</th>
+    </tr>
+    <tr>
+      <td align="left">11.5</td>
+      <td align="left"><details><summary> install </summary><pre><code>pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cu115/torch1.11.0/index.html</code></pre> </details></td>
+      <td align="left"></td>
+      <td align="left"></td>
+      <td align="left"> </td>
+      <td align="left"> </td>
+      <td align="left"> </td>
+      <td align="left"> </td>
+    </tr>
+    <tr>
+      <td align="left">11.3</td>
+      <td align="left"><details><summary> install </summary><pre><code>pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cu113/torch1.11.0/index.html</code></pre> </details></td>
+      <td align="left"><details><summary> install </summary><pre><code>pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cu113/torch1.10.0/index.html</code></pre> </details></td>
+      <td align="left"></td>
+      <td align="left"></code></pre> </details> </td>
+      <td align="left"> </td>
+      <td align="left"> </td>
+      <td align="left"> </td>
+    </tr>
+    <tr>
+      <td align="left">11.1</td>
+      <td align="left"> </td>
+      <td align="left"><details><summary> install </summary><pre><code>pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cu111/torch1.10.0/index.html</code></pre> </details> </td>
+      <td align="left"><details><summary> install </summary><pre><code>pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cu111/torch1.9.0/index.html</code></pre> </details> </td>
+      <td align="left"><details><summary> install </summary><pre><code>pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cu111/torch1.8.0/index.html</code></pre> </details> </td>
+      <td align="left"> </td>
+      <td align="left"> </td>
+      <td align="left"> </td>
+    </tr>
+    <tr>
+      <td align="left">11.0</td>
+      <td align="left"> </td>
+      <td align="left"> </td>
+      <td align="left"> </td>
+      <td align="left"> </td>
+      <td align="left"><details><summary> install </summary><pre><code>pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cu110/torch1.7.0/index.html</code></pre> </details> </td>
+      <td align="left"> </td>
+      <td align="left"> </td>
+    </tr>
+    <tr>
+      <td align="left">10.2</td>
+      <td align="left"><details><summary> install </summary><pre><code>pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cu102/torch1.11.0/index.html</code></pre> </details></td>
+      <td align="left"><details><summary> install </summary><pre><code>pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cu102/torch1.10.0/index.html</code></pre> </details></td>
+      <td align="left"><details><summary> install </summary><pre><code>pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cu102/torch1.9.0/index.html</code></pre> </details> </td>
+      <td align="left"><details><summary> install </summary><pre><code>pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cu102/torch1.8.0/index.html</code></pre> </details> </td>
+      <td align="left"><details><summary> install </summary><pre><code>pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cu102/torch1.7.0/index.html</code></pre> </details> </td>
+      <td align="left"><details><summary> install </summary><pre><code>pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cu102/torch1.6.0/index.html</code></pre> </details> </td>
+      <td align="left"><details><summary> install </summary><pre><code>pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cu102/torch1.5.0/index.html</code></pre> </details> </td>
+    </tr>
+    <tr>
+      <td align="left">10.1</td>
+      <td align="left"> </td>
+      <td align="left"> </td>
+      <td align="left"> </td>
+      <td align="left"><details><summary> install </summary><pre><code> pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cu101/torch1.8.0/index.html</code></pre> </details> </td>
+      <td align="left"><details><summary> install </summary><pre><code> pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cu101/torch1.7.0/index.html</code></pre> </details> </td>
+      <td align="left"><details><summary> install </summary><pre><code> pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cu101/torch1.6.0/index.html</code></pre> </details> </td>
+      <td align="left"><details><summary> install </summary><pre><code> pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cu101/torch1.5.0/index.html</code></pre> </details> </td>
+    </tr>
+    <tr>
+      <td align="left">9.2</td>
+      <td align="left"> </td>
+      <td align="left"> </td>
+      <td align="left"> </td>
+      <td align="left"> </td>
+      <td align="left"><details><summary> install </summary><pre><code> pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cu92/torch1.7.0/index.html</code></pre> </details> </td>
+      <td align="left"><details><summary> install </summary><pre><code> pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cu92/torch1.6.0/index.html</code></pre> </details> </td>
+      <td align="left"><details><summary> install </summary><pre><code> pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cu92/torch1.5.0/index.html</code></pre> </details> </td>
+    </tr>
+    <tr>
+      <td align="left">cpu</td>
+      <td align="left"><details><summary> install </summary><pre><code> pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cpu/torch1.11.0/index.html</code></pre> </details></td>
+      <td align="left"><details><summary> install </summary><pre><code> pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cpu/torch1.10.0/index.html</code></pre> </details> </td>
+      <td align="left"><details><summary> install </summary><pre><code> pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cpu/torch1.9.0/index.html</code></pre> </details> </td>
+      <td align="left"><details><summary> install </summary><pre><code> pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cpu/torch1.8.0/index.html</code></pre> </details> </td>
+      <td align="left"><details><summary> install </summary><pre><code> pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cpu/torch1.7.0/index.html</code></pre> </details> </td>
+      <td align="left"><details><summary> install </summary><pre><code> pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cpu/torch1.6.0/index.html</code></pre> </details> </td>
+      <td align="left"><details><summary> install </summary><pre><code> pip install mmcv-full=={mmcv_version} -f https://download.openmmlab.com/mmcv/dist/cpu/torch1.5.0/index.html</code></pre> </details> </td>
+    </tr>
+  </tbody>
+</table>
 
-#### Using mmcv with Docker
-
-Build with local repository
-
-```bash
-git clone https://github.com/open-mmlab/mmcv.git && cd mmcv
-docker build -t mmcv -f docker/release/Dockerfile .
+```{note}
+The pre-built packages provided above do not include all versions of mmcv-full, you can click on the corresponding links to see the supported versions. For example, if you click [cu102-torch1.8.0](https://download.openmmlab.com/mmcv/dist/cu102/torch1.8.0/index.html), you can see that `cu102-torch1.8.0` only provides 1.3.0 and above versions of mmcv-full. In addition, We no longer provide `mmcv-full` pre-built packages compiled with `PyTorch 1.3 & 1.4` since v1.3.17. You can find previous versions that compiled with PyTorch 1.3 & 1.4 [here](./previous_versions.md). The compatibility is still ensured in our CI, but we will discard the support of PyTorch 1.3 & 1.4 next year.
 ```
 
-Or build with remote repository
-
-```bash
-docker build -t mmcv https://github.com/open-mmlab/mmcv.git#main:docker/release
+```{note}
+mmcv-full does not provide pre-built packages for `cu102-torch1.11` and `cu92-torch*` on Windows.
 ```
 
-The [Dockerfile](release/Dockerfile) installs latest released version of mmcv-full by default, but you can specify mmcv versions to install expected versions.
-
-```bash
-docker image build -t mmcv -f docker/release/Dockerfile --build-arg MMCV=2.0.0 .
-```
-
-If you also want to use other versions of PyTorch and CUDA, you can also pass them when building docker images.
-
-An example to build an image with PyTorch 1.11 and CUDA 11.3.
-
-```bash
-docker build -t mmcv -f docker/release/Dockerfile \
-    --build-arg PYTORCH=1.11.0 \
-    --build-arg CUDA=11.3 \
-    --build-arg CUDNN=8 \
-    --build-arg MMCV=2.0.0 .
-```
-
-More available versions of PyTorch and CUDA can be found at [dockerhub/pytorch](https://hub.docker.com/r/pytorch/pytorch/tags).
-
-### Install mmcv-lite
-
-If you need to use PyTorch-related modules, make sure PyTorch has been successfully installed in your environment by referring to the [PyTorch official installation guide](https://github.com/pytorch/pytorch#installation).
+Another way is to compile locally by running
 
 ```python
-pip install mmcv-lite
+pip install mmcv-full
 ```
+
+Note that the local compiling may take up to 10 mins.
+
+b. Install the lite version.
+
+```python
+pip install mmcv
+```
+
+c. Install full version with custom operators for onnxruntime
+
+- Check [here](https://mmcv.readthedocs.io/en/latest/deployment/onnxruntime_custom_ops.html) for detailed instruction.
+
+If you would like to build MMCV from source, please refer to the [guide](https://mmcv.readthedocs.io/en/latest/get_started/build.html).

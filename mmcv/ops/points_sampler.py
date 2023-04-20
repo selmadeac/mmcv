@@ -4,6 +4,7 @@ import torch
 from torch import Tensor
 from torch import nn as nn
 
+from mmcv.runner import force_fp32
 from .furthest_point_sample import (furthest_point_sample,
                                     furthest_point_sample_with_dist)
 
@@ -23,11 +24,16 @@ def calc_square_dist(point_feat_a: Tensor,
         torch.Tensor: (B, N, M) Square distance between each point pair.
     """
     num_channel = point_feat_a.shape[-1]
-    dist = torch.cdist(point_feat_a, point_feat_b)
+    # [bs, n, 1]
+    a_square = torch.sum(point_feat_a.unsqueeze(dim=2).pow(2), dim=-1)
+    # [bs, 1, m]
+    b_square = torch.sum(point_feat_b.unsqueeze(dim=1).pow(2), dim=-1)
+
+    corr_matrix = torch.matmul(point_feat_a, point_feat_b.transpose(1, 2))
+
+    dist = a_square + b_square - 2 * corr_matrix
     if norm:
-        dist = dist / num_channel
-    else:
-        dist = torch.square(dist)
+        dist = torch.sqrt(dist) / num_channel
     return dist
 
 
@@ -85,6 +91,7 @@ class PointsSampler(nn.Module):
             self.samplers.append(get_sampler_cls(fps_mod)())
         self.fp16_enabled = False
 
+    @force_fp32()
     def forward(self, points_xyz: Tensor, features: Tensor) -> Tensor:
         """
         Args:
@@ -95,11 +102,6 @@ class PointsSampler(nn.Module):
         Returns:
             torch.Tensor: (B, npoint, sample_num) Indices of sampled points.
         """
-        if points_xyz.dtype == torch.half:
-            points_xyz = points_xyz.to(torch.float32)
-        if features is not None and features.dtype == torch.half:
-            features = features.to(torch.float32)
-
         indices = []
         last_fps_end_index = 0
         for fps_sample_range, sampler, npoint in zip(

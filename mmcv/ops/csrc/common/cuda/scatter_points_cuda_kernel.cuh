@@ -34,7 +34,7 @@ __device__ __forceinline__ static void reduceMax(double *address, double val) {
 }
 
 // get rid of meaningless warnings when compiling host code
-#ifdef MMCV_WITH_HIP
+#ifdef HIP_DIFF
 __device__ __forceinline__ static void reduceAdd(float *address, float val) {
   atomicAdd(address, val);
 }
@@ -86,7 +86,7 @@ __device__ __forceinline__ static void reduceAdd(double *address, double val) {
 #endif
 }
 #endif  // __CUDA_ARCH__
-#endif  // MMCV_WITH_HIP
+#endif  // HIP_DIFF
 
 template <typename T>
 __global__ void feats_reduce_kernel(

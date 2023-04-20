@@ -17,6 +17,19 @@ ext_module = ext_loader.load_ext('_ext', [
 class SigmoidFocalLossFunction(Function):
 
     @staticmethod
+    def symbolic(g, input: torch.Tensor, target: torch.LongTensor,
+                 gamma: float, alpha: float, weight: torch.Tensor,
+                 reduction: str):
+        return g.op(
+            'mmcv::MMCVSigmoidFocalLoss',
+            input,
+            target,
+            gamma_f=gamma,
+            alpha_f=alpha,
+            weight_f=weight,
+            reduction_s=reduction)
+
+    @staticmethod
     def forward(ctx,
                 input: torch.Tensor,
                 target: Union[torch.LongTensor, torch.cuda.LongTensor],
@@ -25,7 +38,8 @@ class SigmoidFocalLossFunction(Function):
                 weight: Optional[torch.Tensor] = None,
                 reduction: str = 'mean') -> torch.Tensor:
 
-        assert target.dtype == torch.long
+        assert isinstance(
+            target, (torch.Tensor, torch.LongTensor, torch.cuda.LongTensor))
         assert input.dim() == 2
         assert target.dim() == 1
         assert input.size(0) == target.size(0)
@@ -108,6 +122,19 @@ class SigmoidFocalLoss(nn.Module):
 class SoftmaxFocalLossFunction(Function):
 
     @staticmethod
+    def symbolic(g, input: torch.Tensor, target: torch.LongTensor,
+                 gamma: float, alpha: float, weight: torch.Tensor,
+                 reduction: str):
+        return g.op(
+            'mmcv::MMCVSoftmaxFocalLoss',
+            input,
+            target,
+            gamma_f=gamma,
+            alpha_f=alpha,
+            weight_f=weight,
+            reduction_s=reduction)
+
+    @staticmethod
     def forward(ctx,
                 input: torch.Tensor,
                 target: Union[torch.LongTensor, torch.cuda.LongTensor],
@@ -116,7 +143,7 @@ class SoftmaxFocalLossFunction(Function):
                 weight: Optional[torch.Tensor] = None,
                 reduction='mean') -> torch.Tensor:
 
-        assert target.dtype == torch.long
+        assert isinstance(target, (torch.LongTensor, torch.cuda.LongTensor))
         assert input.dim() == 2
         assert target.dim() == 1
         assert input.size(0) == target.size(0)
